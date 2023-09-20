@@ -1,6 +1,7 @@
 import random
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import filedialog
 
 def generate_random_numbers():
     try:
@@ -13,8 +14,20 @@ def generate_random_numbers():
 
         random_numbers = [random.randint(min_range, max_range) for _ in range(num_of_numbers)]
         result_label.config(text=f"Random numbers between {min_range} and {max_range}: {random_numbers}")
+
+        save_to_file(random_numbers)
     except ValueError:
         messagebox.showerror("Error", "Invalid input. Please enter valid numbers.")
+
+def save_to_file(numbers):
+    file_path = filedialog.asksaveasfilename(defaultextension=".txt",
+                                            filetypes=[("Text Files", "*.txt")],
+                                            title="Save Random Numbers",
+                                            initialfile="random_numbers.txt")
+    if file_path:
+        with open(file_path, "w") as file:
+            file.write(",".join(map(str, numbers)))
+            messagebox.showinfo("Info", f"Random numbers saved to {file_path}")
 
 # Create the main window
 root = tk.Tk()
