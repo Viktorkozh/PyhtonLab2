@@ -8,15 +8,21 @@ import statistics
 
 def generate_random_numbers():
     try:
-        min_range = int(min_entry.get())
-        max_range = int(max_entry.get())
+        min_range = float(min_entry.get())
+        max_range = float(max_entry.get())
         num_of_numbers = int(num_entry.get())
+        data_type = data_type_var.get()
+
         if min_range >= max_range:
             messagebox.showerror("Error", "Invalid range. The minimum number should be less than the maximum number.")
             return
 
-        random_numbers = [random.randint(min_range, max_range) for _ in range(num_of_numbers)]
-        result_label.config(text=f"Random numbers between {min_range} and {max_range}: {random_numbers}")
+        if data_type == "Integer":
+            random_numbers = [random.randint(int(min_range), int(max_range)) for _ in range(num_of_numbers)]
+        else:
+            random_numbers = [random.uniform(min_range, max_range) for _ in range(num_of_numbers)]
+
+        result_label.config(text=f"Random {data_type} numbers between {min_range} and {max_range}: {random_numbers}")
 
         save_to_file(random_numbers)
     except ValueError:
@@ -34,20 +40,25 @@ def save_to_file(numbers):
 
 def plot_histogram():
     try:
-        min_range = int(min_entry.get())
-        max_range = int(max_entry.get())
+        min_range = float(min_entry.get())
+        max_range = float(max_entry.get())
         num_of_numbers = int(num_entry.get())
+        data_type = data_type_var.get()
+
         if min_range >= max_range:
             messagebox.showerror("Error", "Invalid range. The minimum number should be less than the maximum number.")
             return
 
-        random_numbers = [random.randint(min_range, max_range) for _ in range(num_of_numbers)]
+        if data_type == "Integer":
+            random_numbers = [random.randint(int(min_range), int(max_range)) for _ in range(num_of_numbers)]
+        else:
+            random_numbers = [random.uniform(min_range, max_range) for _ in range(num_of_numbers)]
 
         plt.figure()
         plt.hist(random_numbers, bins=20, color='blue', edgecolor='black')
-        plt.xlabel('Random Numbers')
+        plt.xlabel(f'Random {data_type} Numbers')
         plt.ylabel('Frequency')
-        plt.title(f'Random Number Histogram ({num_of_numbers} samples)')
+        plt.title(f'Random {data_type} Number Histogram ({num_of_numbers} samples)')
         plt.grid(True)
 
         canvas = FigureCanvasTkAgg(plt.gcf(), master=root)
@@ -58,14 +69,19 @@ def plot_histogram():
 
 def calculate_statistics():
     try:
-        min_range = int(min_entry.get())
-        max_range = int(max_entry.get())
+        min_range = float(min_entry.get())
+        max_range = float(max_entry.get())
         num_of_numbers = int(num_entry.get())
+        data_type = data_type_var.get()
+
         if min_range >= max_range:
             messagebox.showerror("Error", "Invalid range. The minimum number should be less than the maximum number.")
             return
 
-        random_numbers = [random.randint(min_range, max_range) for _ in range(num_of_numbers)]
+        if data_type == "Integer":
+            random_numbers = [random.randint(int(min_range), int(max_range)) for _ in range(num_of_numbers)]
+        else:
+            random_numbers = [random.uniform(min_range, max_range) for _ in range(num_of_numbers)]
 
         mean = statistics.mean(random_numbers)
         median = statistics.median(random_numbers)
@@ -95,6 +111,17 @@ num_label = tk.Label(root, text="Enter the number of random numbers to generate:
 num_label.pack()
 num_entry = tk.Entry(root)
 num_entry.pack()
+
+data_type_var = tk.StringVar()
+data_type_var.set("Integer")  # Default choice
+data_type_label = tk.Label(root, text="Select data type:")
+data_type_label.pack()
+
+integer_radio = tk.Radiobutton(root, text="Integer", variable=data_type_var, value="Integer")
+integer_radio.pack()
+
+float_radio = tk.Radiobutton(root, text="Float", variable=data_type_var, value="Float")
+float_radio.pack()
 
 generate_button = tk.Button(root, text="Generate Random Numbers", command=generate_random_numbers)
 generate_button.pack()
