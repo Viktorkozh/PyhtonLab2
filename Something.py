@@ -2,16 +2,17 @@ import random
 import tkinter as tk
 from tkinter import messagebox
 
-def generate_random_number():
+def generate_random_numbers():
     try:
         min_range = int(min_entry.get())
         max_range = int(max_entry.get())
+        num_of_numbers = int(num_entry.get())
         if min_range >= max_range:
             messagebox.showerror("Error", "Invalid range. The minimum number should be less than the maximum number.")
             return
 
-        random_number = random.randint(min_range, max_range)
-        result_label.config(text=f"Random number between {min_range} and {max_range}: {random_number}")
+        random_numbers = [random.randint(min_range, max_range) for _ in range(num_of_numbers)]
+        result_label.config(text=f"Random numbers between {min_range} and {max_range}: {random_numbers}")
     except ValueError:
         messagebox.showerror("Error", "Invalid input. Please enter valid numbers.")
 
@@ -30,7 +31,12 @@ max_label.pack()
 max_entry = tk.Entry(root)
 max_entry.pack()
 
-generate_button = tk.Button(root, text="Generate Random Number", command=generate_random_number)
+num_label = tk.Label(root, text="Enter the number of random numbers to generate:")
+num_label.pack()
+num_entry = tk.Entry(root)
+num_entry.pack()
+
+generate_button = tk.Button(root, text="Generate Random Numbers", command=generate_random_numbers)
 generate_button.pack()
 
 result_label = tk.Label(root, text="")
