@@ -2,6 +2,8 @@ import random
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import filedialog
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 def generate_random_numbers():
     try:
@@ -29,6 +31,30 @@ def save_to_file(numbers):
             file.write(",".join(map(str, numbers)))
             messagebox.showinfo("Info", f"Random numbers saved to {file_path}")
 
+def plot_histogram():
+    try:
+        min_range = int(min_entry.get())
+        max_range = int(max_entry.get())
+        num_of_numbers = int(num_entry.get())
+        if min_range >= max_range:
+            messagebox.showerror("Error", "Invalid range. The minimum number should be less than the maximum number.")
+            return
+
+        random_numbers = [random.randint(min_range, max_range) for _ in range(num_of_numbers)]
+
+        plt.figure()
+        plt.hist(random_numbers, bins=20, color='blue', edgecolor='black')
+        plt.xlabel('Random Numbers')
+        plt.ylabel('Frequency')
+        plt.title(f'Random Number Histogram ({num_of_numbers} samples)')
+        plt.grid(True)
+
+        canvas = FigureCanvasTkAgg(plt.gcf(), master=root)
+        canvas.get_tk_widget().pack()
+
+    except ValueError:
+        messagebox.showerror("Error", "Invalid input. Please enter valid numbers.")
+
 # Create the main window
 root = tk.Tk()
 root.title("Random Number Generator")
@@ -51,6 +77,9 @@ num_entry.pack()
 
 generate_button = tk.Button(root, text="Generate Random Numbers", command=generate_random_numbers)
 generate_button.pack()
+
+plot_button = tk.Button(root, text="Plot Histogram", command=plot_histogram)
+plot_button.pack()
 
 result_label = tk.Label(root, text="")
 result_label.pack()
