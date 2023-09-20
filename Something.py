@@ -4,6 +4,7 @@ from tkinter import messagebox
 from tkinter import filedialog
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import statistics
 
 def generate_random_numbers():
     try:
@@ -55,6 +56,26 @@ def plot_histogram():
     except ValueError:
         messagebox.showerror("Error", "Invalid input. Please enter valid numbers.")
 
+def calculate_statistics():
+    try:
+        min_range = int(min_entry.get())
+        max_range = int(max_entry.get())
+        num_of_numbers = int(num_entry.get())
+        if min_range >= max_range:
+            messagebox.showerror("Error", "Invalid range. The minimum number should be less than the maximum number.")
+            return
+
+        random_numbers = [random.randint(min_range, max_range) for _ in range(num_of_numbers)]
+
+        mean = statistics.mean(random_numbers)
+        median = statistics.median(random_numbers)
+        stdev = statistics.stdev(random_numbers)
+
+        messagebox.showinfo("Statistics", f"Mean: {mean}\nMedian: {median}\nStandard Deviation: {stdev}")
+
+    except ValueError:
+        messagebox.showerror("Error", "Invalid input. Please enter valid numbers.")
+
 # Create the main window
 root = tk.Tk()
 root.title("Random Number Generator")
@@ -80,6 +101,9 @@ generate_button.pack()
 
 plot_button = tk.Button(root, text="Plot Histogram", command=plot_histogram)
 plot_button.pack()
+
+statistics_button = tk.Button(root, text="Calculate Statistics", command=calculate_statistics)
+statistics_button.pack()
 
 result_label = tk.Label(root, text="")
 result_label.pack()
